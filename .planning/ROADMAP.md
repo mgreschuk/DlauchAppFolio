@@ -30,12 +30,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Portal home loads and shows a navigation entry point for the Unit Turn tool
   4. AppFolio unit list is fetchable from sandbox environment without authentication errors, at or below the rate limit ceiling
   5. Every automation action (start, step, completion, failure) is written to the activity log in the database in plain language — verifiable by querying the log table directly
-**Plans:** 4 plans
+**Plans:** 1/4 plans executed
 
 Plans:
 - [ ] 01-01-PLAN.md — Project scaffold, DB schema, Auth.js credentials provider
 - [ ] 01-02-PLAN.md — Portal shell UI: sidebar, dashboard, Unit Turn placeholder
-- [ ] 01-03-PLAN.md — AppFolio adapter, rate limiter, state machine, activity log writer
+- [x] 01-03-PLAN.md — AppFolio adapter, rate limiter, state machine, activity log writer
 - [ ] 01-04-PLAN.md — AppFolio status wiring, deployment infra, Railway deploy
 
 **UI hint**: yes
@@ -96,7 +96,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation + AppFolio Connectivity | 0/4 | Planned | - |
+| 1. Foundation + AppFolio Connectivity | 1/4 | In Progress|  |
 | 2. Scope Matrix | 0/TBD | Not started | - |
 | 3. Quest Engine + Approval Flow | 0/TBD | Not started | - |
 | 4. Work Order Automation | 0/TBD | Not started | - |

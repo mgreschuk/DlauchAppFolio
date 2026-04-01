@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-stopped_at: Phase 1 planned — 4 plans across 3 waves, ready to execute
-last_updated: "2026-04-01T23:45:00.000Z"
-last_activity: 2026-04-01 — Phase 1 planning complete; 4 PLAN.md files created, checker passed, all 10 requirements covered
+status: verifying
+stopped_at: "Completed 01-03-PLAN.md — engine primitives: adapter, rate limiter, state machine, activity log"
+last_updated: "2026-04-01T23:41:44.239Z"
+last_activity: "2026-04-01 — Phase 1 planning complete (4 plans, 3 waves): scaffold+auth, portal shell, engine primitives, connectivity+deploy"
 progress:
   total_phases: 5
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_plans: 4
+  completed_plans: 1
   percent: 0
 ---
 
@@ -52,6 +52,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 01 P03 | 7 | 2 tasks | 17 files |
 
 ## Accumulated Context
 
@@ -63,6 +64,9 @@ Recent decisions affecting current work:
 - Roadmap: AppFolio adapter interface defined in Phase 1 before any automation logic — isolates PO API gap blast radius
 - Roadmap: MATRIX phase placed before QUEST+UNIT phases — automation depends on matrix data being present and validated
 - Roadmap: UNIT-05 (PO creation) isolated to Phase 5 — deferred without blocking Phases 1-4; API gap resolution required before Phase 5 planning
+- [Phase 01]: AppFolioAdapter as TypeScript interface — zero-runtime-cost contract; callers type-annotate as interface, never concrete class
+- [Phase 01]: RateLimiter uses sliding window timestamps array — simpler than token bucket, exactly matches 5/15s specification
+- [Phase 01]: StateMachine.getState() uses structuredClone() for immutable returned state
 
 ### Pending Todos
 
@@ -75,7 +79,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T23:45:00.000Z
-Stopped at: Phase 1 planning complete
-Resume file: .planning/phases/01-foundation-appfolio-connectivity/01-01-PLAN.md
+Last session: 2026-04-01T23:41:44.233Z
+Stopped at: Completed 01-03-PLAN.md — engine primitives: adapter, rate limiter, state machine, activity log
+Resume file: None
 Resume command: /gsd:execute-phase 1

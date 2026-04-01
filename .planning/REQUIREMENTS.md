@@ -42,10 +42,10 @@
 
 ### Automation Engine
 
-- [ ] **ENGINE-01**: AppFolio API client enforces rate limiting (≤5 req/15s conservative limit, adjustable from observed behavior; documented limit is 7)
-- [ ] **ENGINE-02**: Before creating any record, system checks AppFolio for duplicates (idempotency — prevents double work orders/POs)
-- [ ] **ENGINE-03**: System uses an adapter interface that separates business logic from execution path — API and browser automation are swappable at the adapter level without changing automation code
-- [ ] **ENGINE-04**: Automation sequences use a step-level state machine — partial failures are recoverable without leaving AppFolio in a corrupt state
+- [x] **ENGINE-01**: AppFolio API client enforces rate limiting (≤5 req/15s conservative limit, adjustable from observed behavior; documented limit is 7)
+- [x] **ENGINE-02**: Before creating any record, system checks AppFolio for duplicates (idempotency — prevents double work orders/POs)
+- [x] **ENGINE-03**: System uses an adapter interface that separates business logic from execution path — API and browser automation are swappable at the adapter level without changing automation code
+- [x] **ENGINE-04**: Automation sequences use a step-level state machine — partial failures are recoverable without leaving AppFolio in a corrupt state
 
 ### Activity Log
 
@@ -114,10 +114,10 @@
 | AUTH-03 | Phase 1 | Pending |
 | PORTAL-01 | Phase 1 | Pending |
 | PORTAL-04 | Phase 1 | Pending |
-| ENGINE-01 | Phase 1 | Pending |
-| ENGINE-02 | Phase 1 | Pending |
-| ENGINE-03 | Phase 1 | Pending |
-| ENGINE-04 | Phase 1 | Pending |
+| ENGINE-01 | Phase 1 | Complete |
+| ENGINE-02 | Phase 1 | Complete |
+| ENGINE-03 | Phase 1 | Complete |
+| ENGINE-04 | Phase 1 | Complete |
 | LOG-01 | Phase 1 | Pending |
 | MATRIX-01 | Phase 2 | Pending |
 | MATRIX-02 | Phase 2 | Pending |
