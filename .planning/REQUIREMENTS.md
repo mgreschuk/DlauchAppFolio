@@ -7,9 +7,9 @@
 
 ### Authentication
 
-- [ ] **AUTH-01**: User can log in with email and password
-- [ ] **AUTH-02**: User session persists across browser refresh (stay logged in)
-- [ ] **AUTH-03**: User can log out from any page
+- [x] **AUTH-01**: User can log in with email and password
+- [x] **AUTH-02**: User session persists across browser refresh (stay logged in)
+- [x] **AUTH-03**: User can log out from any page
 
 ### Portal Shell
 
@@ -49,7 +49,7 @@
 
 ### Activity Log
 
-- [ ] **LOG-01**: Every automation action (start, each step, completion, failure) is written to the activity log in plain, human-readable language
+- [x] **LOG-01**: Every automation action (start, each step, completion, failure) is written to the activity log in plain, human-readable language
 - [ ] **LOG-02**: User can view the activity log with entries listed in reverse-chronological order
 - [ ] **LOG-03**: Each log entry shows the action taken, the unit/scope involved, timestamp, and success/failure status
 
@@ -109,16 +109,16 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
-| AUTH-03 | Phase 1 | Pending |
+| AUTH-01 | Phase 1 | Complete |
+| AUTH-02 | Phase 1 | Complete |
+| AUTH-03 | Phase 1 | Complete |
 | PORTAL-01 | Phase 1 | Pending |
 | PORTAL-04 | Phase 1 | Pending |
 | ENGINE-01 | Phase 1 | Pending |
 | ENGINE-02 | Phase 1 | Pending |
 | ENGINE-03 | Phase 1 | Pending |
 | ENGINE-04 | Phase 1 | Pending |
-| LOG-01 | Phase 1 | Pending |
+| LOG-01 | Phase 1 | Complete |
 | MATRIX-01 | Phase 2 | Pending |
 | MATRIX-02 | Phase 2 | Pending |
 | MATRIX-03 | Phase 2 | Pending |
