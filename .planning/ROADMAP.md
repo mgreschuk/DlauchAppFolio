@@ -35,7 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 - [x] 01-01-PLAN.md — Project scaffold, DB schema, Auth.js credentials provider
 - [ ] 01-02-PLAN.md — Portal shell UI: sidebar, dashboard, Unit Turn placeholder
-- [ ] 01-03-PLAN.md — AppFolio adapter, rate limiter, state machine, activity log writer
+- [x] 01-03-PLAN.md — AppFolio adapter, rate limiter, state machine, activity log writer
 - [ ] 01-04-PLAN.md — AppFolio status wiring, deployment infra, Railway deploy
 
 **UI hint**: yes
