@@ -106,8 +106,8 @@ Card border-radius: 8px
 ```
 
 Fields on login card (top to bottom):
-1. Product name — Display typography — "DLauch Portal"
-2. Subtitle — Body muted — "AppFolio Automation Platform"
+1. Product name — Display typography — "Turnkey"
+2. Subtitle — Body muted — "Powered by Revel 1"
 3. Email field — Label above, Input below
 4. Password field — Label above, Input below
 5. Sign In button — full-width, accent fill, Heading weight
@@ -121,7 +121,7 @@ Top bar: none in Phase 1 — user identity and logout live in sidebar footer
 ```
 
 Sidebar structure (top to bottom):
-1. Logo/product name — 24px top padding, Heading weight
+1. Logo/product name — 24px top padding, Heading weight — "Turnkey"
 2. Nav section — Phase 1 includes one nav item: "Dashboard" (PORTAL-01, PORTAL-04 placeholder)
 3. Sidebar footer — user email (Body muted) + Log Out button (text variant, destructive color)
 
@@ -153,9 +153,10 @@ No third-party registry blocks. Official shadcn registry only.
 
 | Element | Copy |
 |---------|------|
+| Browser tab title | "Turnkey — 3Y Realty" |
 | Primary CTA | "Sign In" |
-| Login page product name | "DLauch Portal" |
-| Login page subtitle | "AppFolio Automation Platform" |
+| Login page product name | "Turnkey" |
+| Login page subtitle | "Powered by Revel 1" |
 | Email field label | "Email" |
 | Password field label | "Password" |
 | Dashboard page title | "Dashboard" |
