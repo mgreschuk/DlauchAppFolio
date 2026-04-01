@@ -107,43 +107,41 @@
 
 ## Traceability
 
-*Populated during roadmap creation.*
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | — | Pending |
-| AUTH-02 | — | Pending |
-| AUTH-03 | — | Pending |
-| PORTAL-01 | — | Pending |
-| PORTAL-02 | — | Pending |
-| PORTAL-03 | — | Pending |
-| PORTAL-04 | — | Pending |
-| QUEST-01 | — | Pending |
-| QUEST-02 | — | Pending |
-| QUEST-03 | — | Pending |
-| QUEST-04 | — | Pending |
-| UNIT-01 | — | Pending |
-| UNIT-02 | — | Pending |
-| UNIT-03 | — | Pending |
-| UNIT-04 | — | Pending |
-| UNIT-05 | — | Pending |
-| MATRIX-01 | — | Pending |
-| MATRIX-02 | — | Pending |
-| MATRIX-03 | — | Pending |
-| MATRIX-04 | — | Pending |
-| ENGINE-01 | — | Pending |
-| ENGINE-02 | — | Pending |
-| ENGINE-03 | — | Pending |
-| ENGINE-04 | — | Pending |
-| LOG-01 | — | Pending |
-| LOG-02 | — | Pending |
-| LOG-03 | — | Pending |
+| AUTH-01 | Phase 1 | Pending |
+| AUTH-02 | Phase 1 | Pending |
+| AUTH-03 | Phase 1 | Pending |
+| PORTAL-01 | Phase 1 | Pending |
+| PORTAL-04 | Phase 1 | Pending |
+| ENGINE-01 | Phase 1 | Pending |
+| ENGINE-02 | Phase 1 | Pending |
+| ENGINE-03 | Phase 1 | Pending |
+| ENGINE-04 | Phase 1 | Pending |
+| LOG-01 | Phase 1 | Pending |
+| MATRIX-01 | Phase 2 | Pending |
+| MATRIX-02 | Phase 2 | Pending |
+| MATRIX-03 | Phase 2 | Pending |
+| MATRIX-04 | Phase 2 | Pending |
+| QUEST-01 | Phase 3 | Pending |
+| QUEST-02 | Phase 3 | Pending |
+| QUEST-03 | Phase 3 | Pending |
+| QUEST-04 | Phase 3 | Pending |
+| PORTAL-02 | Phase 3 | Pending |
+| PORTAL-03 | Phase 3 | Pending |
+| LOG-02 | Phase 3 | Pending |
+| LOG-03 | Phase 3 | Pending |
+| UNIT-01 | Phase 4 | Pending |
+| UNIT-02 | Phase 4 | Pending |
+| UNIT-03 | Phase 4 | Pending |
+| UNIT-04 | Phase 4 | Pending |
+| UNIT-05 | Phase 5 | Pending |
 
 **Coverage:**
 - v1 requirements: 27 total
-- Mapped to phases: 0
-- Unmapped: 27 ⚠️ *(populated by roadmapper)*
+- Mapped to phases: 27
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-01*
-*Last updated: 2026-04-01 after initial definition*
+*Last updated: 2026-04-01 after roadmap creation — traceability populated*
