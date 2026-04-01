@@ -51,7 +51,6 @@ Declared values (multiples of 4 only):
 
 Exceptions:
 - Sidebar width: 240px (not on scale — fixed layout dimension, not spacing token)
-- Touch targets minimum: 44px height for all interactive nav items (accessibility floor)
 - Login card max-width: 400px (layout constraint, not spacing token)
 
 ---
@@ -63,12 +62,11 @@ Exceptions:
 | Body | 14px | 400 (regular) | 1.5 | Nav labels, form helper text, table cell content |
 | Label | 14px | 600 (semibold) | 1.4 | Form field labels, table column headers, badge text |
 | Heading | 20px | 600 (semibold) | 1.3 | Page titles (e.g. "Dashboard", "Sign In") |
-| Display | 28px | 700 (bold) | 1.2 | Login page product name only |
+| Display | 28px | 600 (semibold) | 1.2 | Login page product name only |
 
 Font stack: `Inter, ui-sans-serif, system-ui, -apple-system, sans-serif`
 
-Note: Only two weights are in active use — 400 (body/regular) and 600 (semibold/label/heading).
-700 is reserved exclusively for the login Display element; do not introduce it elsewhere in Phase 1.
+Two weights in use: 400 (body/regular) and 600 (semibold). The 28px Display size provides sufficient visual distinction without a third weight.
 
 ---
 
@@ -205,7 +203,7 @@ Auth.js processes the credential check. Button width must not change during load
 - All form inputs have associated `<label>` elements (htmlFor linkage)
 - Focus ring visible on every interactive element (never `outline: none` without replacement)
 - Color is never the sole indicator of state — error inputs also show error text below the field
-- Sidebar nav items meet 44px minimum touch target height
+- Sidebar nav items meet 44px minimum touch target height (accessibility floor — not a spacing token)
 - Login card is keyboard-navigable in tab order: Email → Password → Sign In button
 
 ---
