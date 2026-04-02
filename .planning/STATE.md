@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: verifying
-stopped_at: Completed 01-foundation-appfolio-connectivity plan 02 (portal shell)
-last_updated: "2026-04-02T00:54:55.569Z"
+stopped_at: "Checkpoint: 01-04 Tasks 1-2 complete, awaiting Railway deployment verification (Task 3)"
+last_updated: "2026-04-02T01:07:24.916Z"
 last_activity: "2026-04-01 — Phase 1 planning complete (4 plans, 3 waves): scaffold+auth, portal shell, engine primitives, connectivity+deploy"
 progress:
   total_phases: 5
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 4
-  completed_plans: 3
+  completed_plans: 4
   percent: 0
 ---
 
@@ -54,6 +54,7 @@ Progress: [░░░░░░░░░░] 0%
 *Updated after each plan completion*
 | Phase 01-foundation-appfolio-connectivity P01 | 10 | 2 tasks | 15 files |
 | Phase 01-foundation-appfolio-connectivity P02 | 4 | 2 tasks | 8 files |
+| Phase 01-foundation-appfolio-connectivity P04 | 10 | 2 tasks | 13 files |
 
 ## Accumulated Context
 
@@ -71,6 +72,8 @@ Recent decisions affecting current work:
 - [Phase 01-foundation-appfolio-connectivity]: (authenticated) route group layout handles session + sidebar for all authenticated pages
 - [Phase 01-foundation-appfolio-connectivity]: LogoutButton uses next-auth/react signOut (client component, not server action) — simpler for single-click logout
 - [Phase 01-foundation-appfolio-connectivity]: SidebarNav extracted as client component — usePathname requires React client context; Sidebar stays server component
+- [Phase 01-foundation-appfolio-connectivity]: Lazy DB singleton via Proxy in src/db/index.ts — DATABASE_URL deferred to request time for Next.js build safety
+- [Phase 01-foundation-appfolio-connectivity]: QueryClientProvider in authenticated layout (not root layout) — TanStack Query context scoped to authenticated pages only
 
 ### Pending Todos
 
@@ -83,7 +86,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-02T00:54:55.564Z
-Stopped at: Completed 01-foundation-appfolio-connectivity plan 02 (portal shell)
+Last session: 2026-04-02T01:07:11.988Z
+Stopped at: Checkpoint: 01-04 Tasks 1-2 complete, awaiting Railway deployment verification (Task 3)
 Resume file: None
 Resume command: /gsd:execute-phase 1
