@@ -8,7 +8,9 @@ import { RateLimiter } from "./rate-limiter";
  * All public methods route through the rate limiter (5 req/15s per ENGINE-01).
  * Business logic must only reference AppFolioAdapter — never this class directly.
  *
- * Base URL: https://api.appfolio.com (per project memory, NOT api.qa.appfolio.com)
+ * API v0: https://api.qa.appfolio.com/api/v0/{endpoint} (sandbox)
+ *         https://api.appfolio.com/api/v0/{endpoint} (production)
+ * No database ID in path — base URL is the full host only.
  */
 export class AppFolioApiClient implements AppFolioAdapter {
   private rateLimiter: RateLimiter;
@@ -17,21 +19,25 @@ export class AppFolioApiClient implements AppFolioAdapter {
 
   constructor(config: AppFolioApiConfig) {
     this.rateLimiter = new RateLimiter(5, 15_000);
-    this.baseUrl = `${config.baseUrl}/${config.databaseId}`;
-    // AppFolio uses client_id:client_secret as Basic auth
+    this.baseUrl = config.baseUrl;
     const credentials = Buffer.from(
       `${config.clientId}:${config.clientSecret}`
     ).toString("base64");
     this.headers = {
       Authorization: `Basic ${credentials}`,
       "Content-Type": "application/json",
+      ...(config.developerId ? { "X-AppFolio-Developer-Id": config.developerId } : {}),
     };
   }
 
   async getUnits(propertyId?: string): Promise<AppFolioUnit[]> {
     return this.rateLimiter.execute(async () => {
-      const url = new URL(`${this.baseUrl}/api/v1/units.json`);
-      if (propertyId) url.searchParams.set("property_id", propertyId);
+      const url = new URL(`${this.baseUrl}/api/v0/units`);
+      if (propertyId) {
+        url.searchParams.set("filters[PropertyId]", propertyId);
+      } else {
+        url.searchParams.set("filters[LastUpdatedAtFrom]", "1970-01-01T00:00:00Z");
+      }
       const res = await fetch(url.toString(), { headers: this.headers });
       if (!res.ok) {
         throw new Error(`AppFolio API error: ${res.status} ${res.statusText}`);
@@ -43,16 +49,17 @@ export class AppFolioApiClient implements AppFolioAdapter {
 
   async checkWorkOrderExists(unitId: string, category: string): Promise<boolean> {
     return this.rateLimiter.execute(async () => {
-      const url = new URL(`${this.baseUrl}/api/v1/tasks.json`);
-      url.searchParams.set("unit_id", unitId);
-      url.searchParams.set("category", category);
-      url.searchParams.set("status", "open");
+      const url = new URL(`${this.baseUrl}/api/v0/work_orders`);
+      url.searchParams.set("filters[UnitId]", unitId);
       const res = await fetch(url.toString(), { headers: this.headers });
       if (!res.ok) {
         throw new Error(`AppFolio API error: ${res.status}`);
       }
       const data = await res.json();
-      return Array.isArray(data) && data.length > 0;
+      const items: unknown[] = Array.isArray(data) ? data : (data as Record<string, unknown[]>)["results"] ?? [];
+      return items.some(
+        (wo) => (wo as Record<string, unknown>)["UnitTurnCategory"] === category
+      );
     });
   }
 
@@ -63,16 +70,14 @@ export class AppFolioApiClient implements AppFolioAdapter {
     description: string;
   }): Promise<AppFolioWorkOrder> {
     return this.rateLimiter.execute(async () => {
-      const res = await fetch(`${this.baseUrl}/api/v1/tasks.json`, {
+      const res = await fetch(`${this.baseUrl}/api/v0/work_orders`, {
         method: "POST",
         headers: this.headers,
         body: JSON.stringify({
-          task: {
-            unit_id: params.unitId,
-            category: params.category,
-            vendor_id: params.vendorId,
-            description: params.description,
-          },
+          UnitId: params.unitId,
+          UnitTurnCategory: params.category,
+          VendorId: params.vendorId || undefined,
+          Description: params.description,
         }),
       });
       if (!res.ok) {
@@ -86,10 +91,10 @@ export class AppFolioApiClient implements AppFolioAdapter {
   async testConnection(): Promise<{ connected: boolean; error?: string }> {
     try {
       return await this.rateLimiter.execute(async () => {
-        const res = await fetch(
-          `${this.baseUrl}/api/v1/units.json?per_page=1`,
-          { headers: this.headers }
-        );
+        const url = new URL(`${this.baseUrl}/api/v0/units`);
+        url.searchParams.set("filters[LastUpdatedAtFrom]", "1970-01-01T00:00:00Z");
+        url.searchParams.set("page[size]", "1");
+        const res = await fetch(url.toString(), { headers: this.headers });
         if (res.ok) return { connected: true };
         return {
           connected: false,
@@ -105,26 +110,29 @@ export class AppFolioApiClient implements AppFolioAdapter {
   }
 
   private mapUnits(data: unknown): AppFolioUnit[] {
-    if (!Array.isArray(data)) return [];
-    return data.map((u: Record<string, unknown>) => ({
-      id: String(u["id"] ?? ""),
-      propertyId: String(u["property_id"] ?? ""),
-      unitName: String(u["name"] ?? u["unit_name"] ?? ""),
-      address: String(u["address"] ?? ""),
-      status: String(u["status"] ?? ""),
-    }));
+    const items: unknown[] = Array.isArray(data) ? data : (data as Record<string, unknown[]>)["results"] ?? [];
+    return items.map((u: unknown) => {
+      const unit = u as Record<string, unknown>;
+      return {
+        id: String(unit["Id"] ?? ""),
+        propertyId: String(unit["PropertyId"] ?? ""),
+        unitName: String(unit["Name"] ?? unit["UnitName"] ?? ""),
+        address: String(unit["Address"] ?? ""),
+        status: String(unit["Status"] ?? ""),
+      };
+    });
   }
 
   private mapWorkOrder(data: Record<string, unknown>): AppFolioWorkOrder {
     return {
-      id: String(data["id"] ?? ""),
-      unitId: String(data["unit_id"] ?? ""),
-      category: String(data["category"] ?? ""),
-      vendorId: String(data["vendor_id"] ?? ""),
-      vendorName: String(data["vendor_name"] ?? ""),
-      description: String(data["description"] ?? ""),
-      status: String(data["status"] ?? ""),
-      createdAt: String(data["created_at"] ?? ""),
+      id: String(data["Id"] ?? ""),
+      unitId: String(data["UnitId"] ?? ""),
+      category: String(data["UnitTurnCategory"] ?? ""),
+      vendorId: String(data["VendorId"] ?? ""),
+      vendorName: String(data["VendorName"] ?? ""),
+      description: String(data["Description"] ?? ""),
+      status: String(data["Status"] ?? ""),
+      createdAt: String(data["CreatedAt"] ?? ""),
     };
   }
 }

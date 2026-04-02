@@ -7,7 +7,7 @@ export async function GET() {
     baseUrl: process.env.APPFOLIO_BASE_URL ?? "https://api.appfolio.com",
     clientId: process.env.APPFOLIO_CLIENT_ID ?? "",
     clientSecret: process.env.APPFOLIO_CLIENT_SECRET ?? "",
-    databaseId: process.env.APPFOLIO_DATABASE_ID ?? "",
+    developerId: process.env.APPFOLIO_DEV_ID,
   });
 
   const result = await client.testConnection();

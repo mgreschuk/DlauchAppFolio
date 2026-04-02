@@ -28,8 +28,8 @@ export interface AppFolioPurchaseOrder {
 }
 
 export interface AppFolioApiConfig {
-  baseUrl: string;       // https://api.appfolio.com
+  baseUrl: string;       // https://api.qa.appfolio.com (sandbox) or https://api.appfolio.com (prod)
   clientId: string;
   clientSecret: string;
-  databaseId: string;
+  developerId?: string;  // X-AppFolio-Developer-Id header
 }
