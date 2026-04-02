@@ -13,10 +13,10 @@
 
 ### Portal Shell
 
-- [ ] **PORTAL-01**: User can navigate to dashboard home from any page
+- [x] **PORTAL-01**: User can navigate to dashboard home from any page
 - [ ] **PORTAL-02**: User can access Quest inbox to view and act on pending approvals
 - [ ] **PORTAL-03**: User can access Activity Log to review full automation history
-- [ ] **PORTAL-04**: User can navigate to the Unit Turn automation tool from the dashboard
+- [x] **PORTAL-04**: User can navigate to the Unit Turn automation tool from the dashboard
 
 ### Quest / Approval Flow
 
@@ -112,8 +112,8 @@
 | AUTH-01 | Phase 1 | Complete |
 | AUTH-02 | Phase 1 | Complete |
 | AUTH-03 | Phase 1 | Complete |
-| PORTAL-01 | Phase 1 | Pending |
-| PORTAL-04 | Phase 1 | Pending |
+| PORTAL-01 | Phase 1 | Complete |
+| PORTAL-04 | Phase 1 | Complete |
 | ENGINE-01 | Phase 1 | Pending |
 | ENGINE-02 | Phase 1 | Pending |
 | ENGINE-03 | Phase 1 | Pending |
