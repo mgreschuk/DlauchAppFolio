@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: paused
-stopped_at: "Wave 1 complete (01-01 scaffold+auth, 01-03 engine primitives) — next: Wave 2 (01-02 portal shell)"
-last_updated: "2026-04-02T00:00:00.000Z"
-last_activity: "2026-04-01 — Phase 1 Wave 1 executed: scaffold+auth and AppFolio engine primitives shipped"
+status: verifying
+stopped_at: Completed 01-foundation-appfolio-connectivity plan 02 (portal shell)
+last_updated: "2026-04-02T00:54:55.569Z"
+last_activity: "2026-04-01 — Phase 1 planning complete (4 plans, 3 waves): scaffold+auth, portal shell, engine primitives, connectivity+deploy"
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 4
-  completed_plans: 2
+  completed_plans: 3
   percent: 0
 ---
 
@@ -53,6 +53,7 @@ Progress: [░░░░░░░░░░] 0%
 
 *Updated after each plan completion*
 | Phase 01-foundation-appfolio-connectivity P01 | 10 | 2 tasks | 15 files |
+| Phase 01-foundation-appfolio-connectivity P02 | 4 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,9 @@ Recent decisions affecting current work:
 - [Phase 01-foundation-appfolio-connectivity]: Next.js 16.2.2 used (create-next-app latest); proxy.ts replaces middleware.ts for Next.js 16 route protection
 - [Phase 01-foundation-appfolio-connectivity]: Single-user auth via ADMIN_EMAIL + ADMIN_PASSWORD_HASH env vars with Auth.js v5 Credentials provider (D-01)
 - [Phase 01-foundation-appfolio-connectivity]: activityLog table with JSONB fields (inputs, planned_actions, expected_outputs) and enum status per D-06
+- [Phase 01-foundation-appfolio-connectivity]: (authenticated) route group layout handles session + sidebar for all authenticated pages
+- [Phase 01-foundation-appfolio-connectivity]: LogoutButton uses next-auth/react signOut (client component, not server action) — simpler for single-click logout
+- [Phase 01-foundation-appfolio-connectivity]: SidebarNav extracted as client component — usePathname requires React client context; Sidebar stays server component
 
 ### Pending Todos
 
@@ -79,7 +83,7 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-01T23:45:47.761Z
-Stopped at: Completed 01-foundation-appfolio-connectivity plan 01 (scaffold + auth)
+Last session: 2026-04-02T00:54:55.564Z
+Stopped at: Completed 01-foundation-appfolio-connectivity plan 02 (portal shell)
 Resume file: None
 Resume command: /gsd:execute-phase 1
