@@ -49,10 +49,10 @@ Plans:
   2. Admin can add a new scope entry through a form and see it appear in the matrix immediately
   3. Admin can edit an existing scope's category, vendor, or description and see the change reflected
   4. Admin can deactivate a scope and confirm it no longer appears in the unit turn scope picker (but history is preserved)
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
-- [ ] 02-01-PLAN.md — Scopes DB schema and CRUD API routes
+- [x] 02-01-PLAN.md — Scopes DB schema and CRUD API routes
 - [ ] 02-02-PLAN.md — Scope matrix UI: data table, filters, add/edit modal, sidebar nav
 
 **UI hint**: yes
@@ -102,7 +102,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation + AppFolio Connectivity | 4/4 | Complete | 2026-04-17 |
-| 2. Scope Matrix | 0/2 | Planned | - |
+| 2. Scope Matrix | 1/2 | In Progress|  |
 | 3. Quest Engine + Approval Flow | 0/TBD | Not started | - |
 | 4. Work Order Automation | 0/TBD | Not started | - |
 | 5. PO Automation + Hardening | 0/TBD | Not started | - |

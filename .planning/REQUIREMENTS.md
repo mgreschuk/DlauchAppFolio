@@ -35,10 +35,10 @@
 
 ### Scope Matrix
 
-- [ ] **MATRIX-01**: Admin can view the full scope-to-category-to-vendor matrix in the portal
-- [ ] **MATRIX-02**: Admin can add a new scope entry (scope name, unit turn category, preferred vendor, work description)
-- [ ] **MATRIX-03**: Admin can edit an existing scope's category, vendor, or description
-- [ ] **MATRIX-04**: Admin can deactivate a scope (hides from unit turn UI without deleting history)
+- [x] **MATRIX-01**: Admin can view the full scope-to-category-to-vendor matrix in the portal
+- [x] **MATRIX-02**: Admin can add a new scope entry (scope name, unit turn category, preferred vendor, work description)
+- [x] **MATRIX-03**: Admin can edit an existing scope's category, vendor, or description
+- [x] **MATRIX-04**: Admin can deactivate a scope (hides from unit turn UI without deleting history)
 
 ### Automation Engine
 
@@ -119,10 +119,10 @@
 | ENGINE-03 | Phase 1 | Pending |
 | ENGINE-04 | Phase 1 | Pending |
 | LOG-01 | Phase 1 | Complete |
-| MATRIX-01 | Phase 2 | Pending |
-| MATRIX-02 | Phase 2 | Pending |
-| MATRIX-03 | Phase 2 | Pending |
-| MATRIX-04 | Phase 2 | Pending |
+| MATRIX-01 | Phase 2 | Complete |
+| MATRIX-02 | Phase 2 | Complete |
+| MATRIX-03 | Phase 2 | Complete |
+| MATRIX-04 | Phase 2 | Complete |
 | QUEST-01 | Phase 3 | Pending |
 | QUEST-02 | Phase 3 | Pending |
 | QUEST-03 | Phase 3 | Pending |
