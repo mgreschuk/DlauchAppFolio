@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Toaster, toast } from "sonner";
-import { ChevronUp, ChevronDown, Pencil, Plus } from "lucide-react";
+import { ChevronUp, ChevronDown, Pencil, Plus, RefreshCw } from "lucide-react";
 import {
   Table,
   TableHeader,
@@ -83,8 +83,26 @@ export function ScopeMatrixClient() {
     [scopes]
   );
 
-  // Note: uniqueVendors is used for table filters only.
-  // The add/edit modal fetches vendors directly from AppFolio.
+  // uniqueVendors is used for table filters only.
+  // The add/edit modal reads from the local vendors cache.
+
+  const syncVendorsMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch("/api/vendors/sync", { method: "POST" });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.detail || data.error || "Sync failed");
+      }
+      return res.json();
+    },
+    onSuccess: (data: { synced: number }) => {
+      queryClient.invalidateQueries({ queryKey: ["vendors"] });
+      toast.success(`Synced ${data.synced} vendors from AppFolio`);
+    },
+    onError: (err: Error) => {
+      toast.error(`Vendor sync failed: ${err.message}`);
+    },
+  });
 
   const filteredScopes = useMemo(() => {
     let result = scopes;
@@ -177,16 +195,27 @@ export function ScopeMatrixClient() {
           vendors={uniqueVendors}
         />
 
-        <Button
-          onClick={() => {
-            setEditingScope(null);
-            setModalOpen(true);
-          }}
-          className="bg-[#3b82f6] hover:bg-[#2563eb] text-white shrink-0"
-        >
-          <Plus className="size-4" />
-          Add Scope
-        </Button>
+        <div className="flex items-center gap-2 shrink-0">
+          <Button
+            variant="outline"
+            onClick={() => syncVendorsMutation.mutate()}
+            disabled={syncVendorsMutation.isPending}
+            className="border-[#334155] text-[#94a3b8] hover:text-[#f8fafc] hover:bg-[#334155]"
+          >
+            <RefreshCw className={`size-4 ${syncVendorsMutation.isPending ? "animate-spin" : ""}`} />
+            {syncVendorsMutation.isPending ? "Syncing..." : "Sync Vendors"}
+          </Button>
+          <Button
+            onClick={() => {
+              setEditingScope(null);
+              setModalOpen(true);
+            }}
+            className="bg-[#3b82f6] hover:bg-[#2563eb] text-white"
+          >
+            <Plus className="size-4" />
+            Add Scope
+          </Button>
+        </div>
       </div>
 
       <div className="rounded-lg border border-[#334155] bg-[#1e293b] overflow-hidden">

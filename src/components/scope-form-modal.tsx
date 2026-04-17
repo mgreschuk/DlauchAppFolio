@@ -46,9 +46,11 @@ interface Scope {
   updatedAt: string;
 }
 
-interface AppFolioVendor {
+interface CachedVendor {
   id: string;
+  appfolioId: string;
   name: string;
+  syncedAt: string;
 }
 
 interface ScopeFormModalProps {
@@ -130,8 +132,8 @@ function Combobox({ value, onChange, options, placeholder }: ComboboxProps) {
   );
 }
 
-async function fetchAppFolioVendors(): Promise<AppFolioVendor[]> {
-  const res = await fetch("/api/appfolio/vendors");
+async function fetchCachedVendors(): Promise<CachedVendor[]> {
+  const res = await fetch("/api/vendors");
   if (!res.ok) throw new Error("Failed to fetch vendors");
   return res.json();
 }
@@ -148,34 +150,35 @@ export function ScopeFormModal({
   const [selectedVendorId, setSelectedVendorId] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { data: appFolioVendors = [], isLoading: vendorsLoading } = useQuery({
-    queryKey: ["appfolio-vendors"],
-    queryFn: fetchAppFolioVendors,
-    staleTime: 5 * 60 * 1000, // cache for 5 minutes
+  const { data: vendors = [], isLoading: vendorsLoading } = useQuery({
+    queryKey: ["vendors"],
+    queryFn: fetchCachedVendors,
   });
 
   useEffect(() => {
     if (editScope) {
       setScopeName(editScope.scopeName);
       setCategory(editScope.category);
-      // Find the vendor ID that matches the stored vendor name, or use stored vendorId
       if (editScope.vendorId) {
-        setSelectedVendorId(editScope.vendorId);
+        // Match by AppFolio vendor ID stored on the scope
+        const match = vendors.find((v) => v.appfolioId === editScope.vendorId);
+        setSelectedVendorId(match?.appfolioId ?? "");
       } else {
-        const match = appFolioVendors.find((v) => v.name === editScope.vendor);
-        setSelectedVendorId(match?.id ?? "");
+        // Fallback: match by name for scopes created before vendorId was stored
+        const match = vendors.find((v) => v.name === editScope.vendor);
+        setSelectedVendorId(match?.appfolioId ?? "");
       }
     } else {
       setScopeName("");
       setCategory("");
       setSelectedVendorId("");
     }
-  }, [editScope, open, appFolioVendors]);
+  }, [editScope, open, vendors]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const selectedVendor = appFolioVendors.find((v) => v.id === selectedVendorId);
+    const selectedVendor = vendors.find((v) => v.appfolioId === selectedVendorId);
 
     if (!scopeName.trim() || !category.trim() || !selectedVendor) {
       toast.error("All fields are required");
@@ -195,7 +198,7 @@ export function ScopeFormModal({
           scopeName,
           category,
           vendor: selectedVendor.name,
-          vendorId: selectedVendor.id,
+          vendorId: selectedVendor.appfolioId,
         }),
       });
 
@@ -259,11 +262,11 @@ export function ScopeFormModal({
             <Label className="text-[#f8fafc]">Vendor</Label>
             {vendorsLoading ? (
               <div className="px-3 py-2 text-sm text-[#94a3b8] border border-[#334155] rounded-lg bg-[#0f172a]">
-                Loading vendors from AppFolio...
+                Loading vendors...
               </div>
-            ) : appFolioVendors.length === 0 ? (
+            ) : vendors.length === 0 ? (
               <div className="px-3 py-2 text-sm text-[#94a3b8] border border-[#334155] rounded-lg bg-[#0f172a]">
-                No vendors found — check AppFolio connection
+                No vendors cached — click "Sync Vendors" on the scope matrix page first
               </div>
             ) : (
               <Select value={selectedVendorId} onValueChange={(val) => setSelectedVendorId(val ?? "")}>
@@ -271,10 +274,10 @@ export function ScopeFormModal({
                   <SelectValue placeholder="Select a vendor" />
                 </SelectTrigger>
                 <SelectContent className="bg-[#1e293b] border-[#334155]">
-                  {appFolioVendors.map((v) => (
+                  {vendors.map((v) => (
                     <SelectItem
-                      key={v.id}
-                      value={v.id}
+                      key={v.appfolioId}
+                      value={v.appfolioId}
                       className="text-[#f8fafc] focus:bg-[#334155] focus:text-[#f8fafc]"
                     >
                       {v.name}

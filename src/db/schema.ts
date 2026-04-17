@@ -81,3 +81,20 @@ export const scopes = pgTable("scopes", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });
+
+/**
+ * Cached vendor list from AppFolio.
+ *
+ * Vendors are synced on demand (admin clicks "Sync from AppFolio") and stored
+ * locally so the scope matrix vendor dropdown is always fast. The appfolioId
+ * links back to the AppFolio record for work order creation in Phases 3-5.
+ */
+export const vendors = pgTable("vendors", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  /** AppFolio vendor ID */
+  appfolioId: varchar("appfolio_id", { length: 100 }).notNull().unique(),
+  /** Vendor display name from AppFolio */
+  name: varchar("name", { length: 255 }).notNull(),
+  /** When this record was last synced from AppFolio */
+  syncedAt: timestamp("synced_at", { withTimezone: true }).notNull().defaultNow(),
+});
