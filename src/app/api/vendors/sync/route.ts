@@ -12,27 +12,24 @@ export async function POST() {
       developerId: process.env.APPFOLIO_DEV_ID,
     });
 
-    const appFolioVendors = await client.getVendors();
+    const appfolioVendors = await client.getVendors();
 
-    if (appFolioVendors.length === 0) {
+    if (appfolioVendors.length === 0) {
       return NextResponse.json(
         { error: "No vendors returned from AppFolio — check connection" },
         { status: 502 }
       );
     }
 
-    // Upsert: insert new vendors, update names on conflict
     const now = new Date();
     let synced = 0;
 
-    for (const v of appFolioVendors) {
+    for (const v of appfolioVendors) {
+      if (!v.id || !v.name) continue;
+
       await db
         .insert(vendors)
-        .values({
-          appfolioId: v.id,
-          name: v.name,
-          syncedAt: now,
-        })
+        .values({ appfolioId: v.id, name: v.name, syncedAt: now })
         .onConflictDoUpdate({
           target: vendors.appfolioId,
           set: { name: v.name, syncedAt: now },
@@ -42,6 +39,7 @@ export async function POST() {
 
     return NextResponse.json({
       synced,
+      totalReturned: appfolioVendors.length,
       syncedAt: now.toISOString(),
     });
   } catch (err) {

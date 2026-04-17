@@ -71,7 +71,12 @@ export class AppFolioApiClient implements AppFolioAdapter {
         throw new Error(`AppFolio API error: ${res.status}`);
       }
       const data = await res.json();
-      const items: unknown[] = Array.isArray(data) ? data : (data as Record<string, unknown[]>)["results"] ?? [];
+      const root = data as Record<string, unknown>;
+      const items: unknown[] = Array.isArray(data)
+        ? data
+        : Array.isArray(root["data"])
+          ? (root["data"] as unknown[])
+          : [];
       return items.some(
         (wo) => (wo as Record<string, unknown>)["UnitTurnCategory"] === category
       );
@@ -125,18 +130,32 @@ export class AppFolioApiClient implements AppFolioAdapter {
   }
 
   private mapVendors(data: unknown): AppFolioVendor[] {
-    const items: unknown[] = Array.isArray(data) ? data : (data as Record<string, unknown[]>)["results"] ?? [];
+    const root = data as Record<string, unknown>;
+    const items: unknown[] = Array.isArray(data)
+      ? data
+      : Array.isArray(root["data"])
+        ? (root["data"] as unknown[])
+        : [];
     return items.map((v: unknown) => {
       const vendor = v as Record<string, unknown>;
+      const isCompany = vendor["IsCompany"] === true;
+      const name = isCompany
+        ? String(vendor["CompanyName"] ?? "")
+        : [vendor["FirstName"], vendor["LastName"]].filter(Boolean).join(" ");
       return {
         id: String(vendor["Id"] ?? ""),
-        name: String(vendor["Name"] ?? vendor["CompanyName"] ?? ""),
+        name,
       };
     });
   }
 
   private mapUnits(data: unknown): AppFolioUnit[] {
-    const items: unknown[] = Array.isArray(data) ? data : (data as Record<string, unknown[]>)["results"] ?? [];
+    const root = data as Record<string, unknown>;
+    const items: unknown[] = Array.isArray(data)
+      ? data
+      : Array.isArray(root["data"])
+        ? (root["data"] as unknown[])
+        : [];
     return items.map((u: unknown) => {
       const unit = u as Record<string, unknown>;
       return {
