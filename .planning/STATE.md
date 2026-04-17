@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: verifying
-stopped_at: "Checkpoint: 01-04 Tasks 1-2 complete, awaiting Railway deployment verification (Task 3)"
-last_updated: "2026-04-02T01:07:24.916Z"
-last_activity: "2026-04-01 — Phase 1 planning complete (4 plans, 3 waves): scaffold+auth, portal shell, engine primitives, connectivity+deploy"
+status: Ready to discuss/plan Phase 2
+stopped_at: Phase 2 context gathered
+last_updated: "2026-04-17T15:30:44.856Z"
+last_activity: 2026-04-17 — Phase 1 deployment verified on Railway
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 4
   completed_plans: 4
-  percent: 0
+  percent: 20
 ---
 
 # Project State
@@ -21,40 +21,35 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-01)
 
 **Core value:** A user selects what they want done, clicks Go, and it happens — with full transparency into what the automation did and why.
-**Current focus:** Phase 1 — Foundation + AppFolio Connectivity
+**Current focus:** Phase 2 — Scope Matrix
 
 ## Current Position
 
-Phase: 1 of 5 (Foundation + AppFolio Connectivity)
+Phase: 2 of 5 (Scope Matrix)
 Plan: 0 of TBD in current phase
-Status: Ready to execute — 4 plans verified, all requirements covered
-Last activity: 2026-04-01 — Phase 1 planning complete (4 plans, 3 waves): scaffold+auth, portal shell, engine primitives, connectivity+deploy
+Status: Ready to discuss/plan Phase 2
+Last activity: 2026-04-17 — Phase 1 deployment verified on Railway
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██░░░░░░░░] 20%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 0
-- Average duration: —
-- Total execution time: 0 hours
+- Total plans completed: 4
+- Average duration: ~10 min
+- Total execution time: ~40 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| Phase 1: Foundation | 4 | ~40 min | ~10 min |
 
 **Recent Trend:**
 
-- Last 5 plans: —
-- Trend: —
-
-*Updated after each plan completion*
-| Phase 01-foundation-appfolio-connectivity P01 | 10 | 2 tasks | 15 files |
-| Phase 01-foundation-appfolio-connectivity P02 | 4 | 2 tasks | 8 files |
-| Phase 01-foundation-appfolio-connectivity P04 | 10 | 2 tasks | 13 files |
+- Last 5 plans: P01 (10m), P02 (4m), P03 (10m), P04 (10m)
+- Trend: Consistent
 
 ## Accumulated Context
 
@@ -66,14 +61,9 @@ Recent decisions affecting current work:
 - Roadmap: AppFolio adapter interface defined in Phase 1 before any automation logic — isolates PO API gap blast radius
 - Roadmap: MATRIX phase placed before QUEST+UNIT phases — automation depends on matrix data being present and validated
 - Roadmap: UNIT-05 (PO creation) isolated to Phase 5 — deferred without blocking Phases 1-4; API gap resolution required before Phase 5 planning
-- [Phase 01-foundation-appfolio-connectivity]: Next.js 16.2.2 used (create-next-app latest); proxy.ts replaces middleware.ts for Next.js 16 route protection
-- [Phase 01-foundation-appfolio-connectivity]: Single-user auth via ADMIN_EMAIL + ADMIN_PASSWORD_HASH env vars with Auth.js v5 Credentials provider (D-01)
-- [Phase 01-foundation-appfolio-connectivity]: activityLog table with JSONB fields (inputs, planned_actions, expected_outputs) and enum status per D-06
-- [Phase 01-foundation-appfolio-connectivity]: (authenticated) route group layout handles session + sidebar for all authenticated pages
-- [Phase 01-foundation-appfolio-connectivity]: LogoutButton uses next-auth/react signOut (client component, not server action) — simpler for single-click logout
-- [Phase 01-foundation-appfolio-connectivity]: SidebarNav extracted as client component — usePathname requires React client context; Sidebar stays server component
-- [Phase 01-foundation-appfolio-connectivity]: Lazy DB singleton via Proxy in src/db/index.ts — DATABASE_URL deferred to request time for Next.js build safety
-- [Phase 01-foundation-appfolio-connectivity]: QueryClientProvider in authenticated layout (not root layout) — TanStack Query context scoped to authenticated pages only
+- [Phase 01]: Switched from Dockerfile/standalone to Nixpacks for Railway deployment — standalone output caused silent 502s
+- [Phase 01]: Auth proxy excludes /api/health so Railway health checks pass
+- [Phase 01]: Railway deployment URL: https://dlauchappfolioservice-production.up.railway.app
 
 ### Pending Todos
 
@@ -83,10 +73,11 @@ None yet.
 
 - Phase 5 is blocked on AppFolio PO API resolution. AppFolio support contacted. If no API path confirmed by time Phase 4 completes, Playwright fallback becomes primary implementation behind the adapter interface.
 - AppFolio sandbox/production field-level differences are not yet enumerated. Start `docs/appfolio-field-notes.md` in Phase 1 and maintain throughout.
+- AppFolio "Connection failed" on deployed dashboard — may be stale sandbox credentials or network issue. Not a blocker but should be investigated.
 
 ## Session Continuity
 
-Last session: 2026-04-02T01:07:11.988Z
-Stopped at: Checkpoint: 01-04 Tasks 1-2 complete, awaiting Railway deployment verification (Task 3)
-Resume file: None
-Resume command: /gsd:execute-phase 1
+Last session: 2026-04-17T15:30:44.849Z
+Stopped at: Phase 2 context gathered
+Resume file: .planning/phases/02-scope-matrix/02-CONTEXT.md
+Resume command: /gsd:discuss-phase 2
