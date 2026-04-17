@@ -12,7 +12,7 @@ Five phases deliver a complete unit turn automation portal. The foundation estab
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation + AppFolio Connectivity** - Auth, portal shell, AppFolio adapter, engine primitives, activity log persistence
+- [x] **Phase 1: Foundation + AppFolio Connectivity** - Auth, portal shell, AppFolio adapter, engine primitives, activity log persistence
 - [ ] **Phase 2: Scope Matrix** - Admin UI to view and manage the scope-to-category-to-vendor mapping
 - [ ] **Phase 3: Quest Engine + Approval Flow** - Quest builder, approval inbox, execution log display, and portal navigation
 - [ ] **Phase 4: Work Order Automation** - Unit selector, scope picker, Go trigger, and work order creation via AppFolio API
@@ -30,7 +30,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Portal home loads and shows a navigation entry point for the Unit Turn tool
   4. AppFolio unit list is fetchable from sandbox environment without authentication errors, at or below the rate limit ceiling
   5. Every automation action (start, step, completion, failure) is written to the activity log in the database in plain language — verifiable by querying the log table directly
-**Plans:** 3/4 plans executed
+**Plans:** 4/4 plans executed
 
 Plans:
 - [x] 01-01-PLAN.md — Project scaffold, DB schema, Auth.js credentials provider
@@ -49,7 +49,12 @@ Plans:
   2. Admin can add a new scope entry through a form and see it appear in the matrix immediately
   3. Admin can edit an existing scope's category, vendor, or description and see the change reflected
   4. Admin can deactivate a scope and confirm it no longer appears in the unit turn scope picker (but history is preserved)
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Scopes DB schema and CRUD API routes
+- [ ] 02-02-PLAN.md — Scope matrix UI: data table, filters, add/edit modal, sidebar nav
+
 **UI hint**: yes
 
 ### Phase 3: Quest Engine + Approval Flow
@@ -96,8 +101,8 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation + AppFolio Connectivity | 3/4 | In Progress|  |
-| 2. Scope Matrix | 0/TBD | Not started | - |
+| 1. Foundation + AppFolio Connectivity | 4/4 | Complete | 2026-04-17 |
+| 2. Scope Matrix | 0/2 | Planned | - |
 | 3. Quest Engine + Approval Flow | 0/TBD | Not started | - |
 | 4. Work Order Automation | 0/TBD | Not started | - |
 | 5. PO Automation + Hardening | 0/TBD | Not started | - |
@@ -140,4 +145,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5
 
 ---
 *Roadmap created: 2026-04-01*
-*Last updated: 2026-04-01 after Phase 1 planning complete*
+*Last updated: 2026-04-17 after Phase 2 planning complete*
