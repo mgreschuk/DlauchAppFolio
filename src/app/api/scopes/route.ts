@@ -8,7 +8,7 @@ const createScopeSchema = z.object({
   scopeName: z.string().min(1).max(255),
   category: z.string().min(1).max(255),
   vendor: z.string().min(1).max(255),
-  workDescription: z.string().min(1),
+  vendorId: z.string().max(100).optional(),
 });
 
 export async function GET(request: NextRequest) {
@@ -45,11 +45,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { scopeName, category, vendor, workDescription } = parsed.data;
+    const { scopeName, category, vendor, vendorId } = parsed.data;
 
     const [newScope] = await db
       .insert(scopes)
-      .values({ scopeName, category, vendor, workDescription })
+      .values({ scopeName, category, vendor, vendorId: vendorId ?? null })
       .returning();
 
     return NextResponse.json(newScope, { status: 201 });

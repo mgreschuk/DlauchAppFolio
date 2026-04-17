@@ -1,5 +1,5 @@
 import type { AppFolioAdapter } from "./adapter";
-import type { AppFolioApiConfig, AppFolioUnit, AppFolioWorkOrder } from "./types";
+import type { AppFolioApiConfig, AppFolioUnit, AppFolioVendor, AppFolioWorkOrder } from "./types";
 import { RateLimiter } from "./rate-limiter";
 
 /**
@@ -28,6 +28,18 @@ export class AppFolioApiClient implements AppFolioAdapter {
       "Content-Type": "application/json",
       ...(config.developerId ? { "X-AppFolio-Developer-Id": config.developerId } : {}),
     };
+  }
+
+  async getVendors(): Promise<AppFolioVendor[]> {
+    return this.rateLimiter.execute(async () => {
+      const url = new URL(`${this.baseUrl}/api/v0/vendors`);
+      const res = await fetch(url.toString(), { headers: this.headers });
+      if (!res.ok) {
+        throw new Error(`AppFolio API error: ${res.status} ${res.statusText}`);
+      }
+      const data = await res.json();
+      return this.mapVendors(data);
+    });
   }
 
   async getUnits(propertyId?: string): Promise<AppFolioUnit[]> {
@@ -107,6 +119,17 @@ export class AppFolioApiClient implements AppFolioAdapter {
         error: error instanceof Error ? error.message : "Unknown error",
       };
     }
+  }
+
+  private mapVendors(data: unknown): AppFolioVendor[] {
+    const items: unknown[] = Array.isArray(data) ? data : (data as Record<string, unknown[]>)["results"] ?? [];
+    return items.map((v: unknown) => {
+      const vendor = v as Record<string, unknown>;
+      return {
+        id: String(vendor["Id"] ?? ""),
+        name: String(vendor["Name"] ?? vendor["CompanyName"] ?? ""),
+      };
+    });
   }
 
   private mapUnits(data: unknown): AppFolioUnit[] {

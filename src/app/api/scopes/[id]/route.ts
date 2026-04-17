@@ -8,7 +8,7 @@ const updateScopeSchema = z.object({
   scopeName: z.string().min(1).max(255).optional(),
   category: z.string().min(1).max(255).optional(),
   vendor: z.string().min(1).max(255).optional(),
-  workDescription: z.string().min(1).optional(),
+  vendorId: z.string().max(100).optional(),
 });
 
 export async function GET(

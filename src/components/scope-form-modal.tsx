@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -22,6 +23,13 @@ import {
   CommandGroup,
   CommandItem,
 } from "@/components/ui/command";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -32,10 +40,15 @@ interface Scope {
   scopeName: string;
   category: string;
   vendor: string;
-  workDescription: string;
+  vendorId: string | null;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+interface AppFolioVendor {
+  id: string;
+  name: string;
 }
 
 interface ScopeFormModalProps {
@@ -44,7 +57,6 @@ interface ScopeFormModalProps {
   editScope: Scope | null;
   onSuccess: () => void;
   existingCategories: string[];
-  existingVendors: string[];
 }
 
 interface ComboboxProps {
@@ -118,38 +130,54 @@ function Combobox({ value, onChange, options, placeholder }: ComboboxProps) {
   );
 }
 
+async function fetchAppFolioVendors(): Promise<AppFolioVendor[]> {
+  const res = await fetch("/api/appfolio/vendors");
+  if (!res.ok) throw new Error("Failed to fetch vendors");
+  return res.json();
+}
+
 export function ScopeFormModal({
   open,
   onOpenChange,
   editScope,
   onSuccess,
   existingCategories,
-  existingVendors,
 }: ScopeFormModalProps) {
   const [scopeName, setScopeName] = useState("");
   const [category, setCategory] = useState("");
-  const [vendor, setVendor] = useState("");
-  const [workDescription, setWorkDescription] = useState("");
+  const [selectedVendorId, setSelectedVendorId] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { data: appFolioVendors = [], isLoading: vendorsLoading } = useQuery({
+    queryKey: ["appfolio-vendors"],
+    queryFn: fetchAppFolioVendors,
+    staleTime: 5 * 60 * 1000, // cache for 5 minutes
+  });
 
   useEffect(() => {
     if (editScope) {
       setScopeName(editScope.scopeName);
       setCategory(editScope.category);
-      setVendor(editScope.vendor);
-      setWorkDescription(editScope.workDescription);
+      // Find the vendor ID that matches the stored vendor name, or use stored vendorId
+      if (editScope.vendorId) {
+        setSelectedVendorId(editScope.vendorId);
+      } else {
+        const match = appFolioVendors.find((v) => v.name === editScope.vendor);
+        setSelectedVendorId(match?.id ?? "");
+      }
     } else {
       setScopeName("");
       setCategory("");
-      setVendor("");
-      setWorkDescription("");
+      setSelectedVendorId("");
     }
-  }, [editScope, open]);
+  }, [editScope, open, appFolioVendors]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!scopeName.trim() || !category.trim() || !vendor.trim() || !workDescription.trim()) {
+    const selectedVendor = appFolioVendors.find((v) => v.id === selectedVendorId);
+
+    if (!scopeName.trim() || !category.trim() || !selectedVendor) {
       toast.error("All fields are required");
       return;
     }
@@ -163,7 +191,12 @@ export function ScopeFormModal({
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ scopeName, category, vendor, workDescription }),
+        body: JSON.stringify({
+          scopeName,
+          category,
+          vendor: selectedVendor.name,
+          vendorId: selectedVendor.id,
+        }),
       });
 
       if (res.status === 409) {
@@ -224,27 +257,32 @@ export function ScopeFormModal({
 
           <div className="flex flex-col gap-1.5">
             <Label className="text-[#f8fafc]">Vendor</Label>
-            <Combobox
-              value={vendor}
-              onChange={setVendor}
-              options={existingVendors}
-              placeholder="e.g. ABC Painters"
-            />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="work-description" className="text-[#f8fafc]">
-              Work Description
-            </Label>
-            <textarea
-              id="work-description"
-              value={workDescription}
-              onChange={(e) => setWorkDescription(e.target.value)}
-              placeholder="Describe the work to be performed..."
-              required
-              rows={3}
-              className="bg-[#0f172a] border border-[#334155] rounded-md px-3 py-2 text-sm text-[#f8fafc] placeholder:text-[#64748b] resize-none outline-none focus:border-[#3b82f6] transition-colors"
-            />
+            {vendorsLoading ? (
+              <div className="px-3 py-2 text-sm text-[#94a3b8] border border-[#334155] rounded-lg bg-[#0f172a]">
+                Loading vendors from AppFolio...
+              </div>
+            ) : appFolioVendors.length === 0 ? (
+              <div className="px-3 py-2 text-sm text-[#94a3b8] border border-[#334155] rounded-lg bg-[#0f172a]">
+                No vendors found — check AppFolio connection
+              </div>
+            ) : (
+              <Select value={selectedVendorId} onValueChange={(val) => setSelectedVendorId(val ?? "")}>
+                <SelectTrigger className="bg-[#0f172a] border-[#334155] text-[#f8fafc]">
+                  <SelectValue placeholder="Select a vendor" />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1e293b] border-[#334155]">
+                  {appFolioVendors.map((v) => (
+                    <SelectItem
+                      key={v.id}
+                      value={v.id}
+                      className="text-[#f8fafc] focus:bg-[#334155] focus:text-[#f8fafc]"
+                    >
+                      {v.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
 
           <DialogFooter className="border-t border-[#334155] bg-transparent -mx-4 -mb-4 px-4 pb-4 mt-2">
@@ -259,7 +297,7 @@ export function ScopeFormModal({
             </Button>
             <Button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || vendorsLoading}
               className="bg-[#3b82f6] hover:bg-[#2563eb] text-white"
             >
               {isSubmitting ? "Saving..." : isEdit ? "Save Changes" : "Add Scope"}

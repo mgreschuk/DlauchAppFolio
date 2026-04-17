@@ -1,4 +1,4 @@
-import type { AppFolioUnit, AppFolioWorkOrder } from "./types";
+import type { AppFolioUnit, AppFolioVendor, AppFolioWorkOrder } from "./types";
 
 /**
  * Abstract adapter interface for AppFolio operations (ENGINE-03).
@@ -10,6 +10,9 @@ import type { AppFolioUnit, AppFolioWorkOrder } from "./types";
 export interface AppFolioAdapter {
   /** Fetch units from AppFolio. Returns all units or filtered by property. */
   getUnits(propertyId?: string): Promise<AppFolioUnit[]>;
+
+  /** Fetch vendors from AppFolio. Returns all active vendors. */
+  getVendors(): Promise<AppFolioVendor[]>;
 
   /**
    * Check if a work order already exists for the given unit+category (ENGINE-02).

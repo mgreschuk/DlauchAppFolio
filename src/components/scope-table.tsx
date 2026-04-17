@@ -22,13 +22,13 @@ interface Scope {
   scopeName: string;
   category: string;
   vendor: string;
-  workDescription: string;
+  vendorId: string | null;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
-type SortColumn = "scopeName" | "category" | "vendor" | "workDescription";
+type SortColumn = "scopeName" | "category" | "vendor";
 type SortDirection = "asc" | "desc";
 
 async function fetchScopes(includeInactive: boolean): Promise<Scope[]> {
@@ -83,6 +83,9 @@ export function ScopeMatrixClient() {
     [scopes]
   );
 
+  // Note: uniqueVendors is used for table filters only.
+  // The add/edit modal fetches vendors directly from AppFolio.
+
   const filteredScopes = useMemo(() => {
     let result = scopes;
 
@@ -92,8 +95,7 @@ export function ScopeMatrixClient() {
         (s) =>
           s.scopeName.toLowerCase().includes(lower) ||
           s.category.toLowerCase().includes(lower) ||
-          s.vendor.toLowerCase().includes(lower) ||
-          s.workDescription.toLowerCase().includes(lower)
+          s.vendor.toLowerCase().includes(lower)
       );
     }
 
@@ -212,13 +214,6 @@ export function ScopeMatrixClient() {
                 Vendor
                 <SortIcon column="vendor" />
               </TableHead>
-              <TableHead
-                className="py-2 px-3 text-xs uppercase tracking-wider font-medium text-[#94a3b8] cursor-pointer whitespace-nowrap"
-                onClick={() => handleSort("workDescription")}
-              >
-                Work Description
-                <SortIcon column="workDescription" />
-              </TableHead>
               <TableHead className="py-2 px-3 text-xs uppercase tracking-wider font-medium text-[#94a3b8] whitespace-nowrap">
                 Status
               </TableHead>
@@ -231,7 +226,7 @@ export function ScopeMatrixClient() {
             {filteredScopes.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={6}
+                  colSpan={5}
                   className="py-8 text-center text-[#94a3b8] text-sm"
                 >
                   No scopes found.
@@ -254,9 +249,6 @@ export function ScopeMatrixClient() {
                   </TableCell>
                   <TableCell className="py-2 px-3 text-sm text-[#f8fafc]">
                     {scope.vendor}
-                  </TableCell>
-                  <TableCell className="py-2 px-3 text-sm text-[#f8fafc] max-w-xs truncate">
-                    {scope.workDescription}
                   </TableCell>
                   <TableCell className="py-2 px-3">
                     <Switch
@@ -292,7 +284,6 @@ export function ScopeMatrixClient() {
         editScope={editingScope}
         onSuccess={() => queryClient.invalidateQueries({ queryKey: ["scopes"] })}
         existingCategories={uniqueCategories}
-        existingVendors={uniqueVendors}
       />
     </div>
   );

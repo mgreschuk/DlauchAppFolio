@@ -58,9 +58,9 @@ export const activityLog = pgTable("activity_log", {
 /**
  * Scope matrix table (MATRIX-01 through MATRIX-04).
  *
- * Configuration layer driving all unit turn automations. Each row maps a
- * scope name to a unit turn category and preferred vendor. The work
- * description is written verbatim to the work order in Phases 3-5.
+ * Static configuration layer driving all unit turn automations. Each row maps
+ * a scope name to a unit turn category and preferred vendor (from AppFolio).
+ * Work descriptions are specified per-unit-turn at creation time, not here.
  *
  * Per D-11: scope_name has a unique constraint.
  * Per MATRIX-04: isActive supports soft-delete (deactivated scopes are
@@ -72,10 +72,10 @@ export const scopes = pgTable("scopes", {
   scopeName: varchar("scope_name", { length: 255 }).notNull().unique(),
   /** Unit turn category this scope maps to */
   category: varchar("category", { length: 255 }).notNull(),
-  /** Preferred vendor for this scope */
+  /** Preferred vendor display name */
   vendor: varchar("vendor", { length: 255 }).notNull(),
-  /** Work description — what gets written to the work order */
-  workDescription: text("work_description").notNull(),
+  /** AppFolio vendor ID — used when creating work orders in Phases 3-5 */
+  vendorId: varchar("vendor_id", { length: 100 }),
   /** Soft-delete flag per MATRIX-04 — active scopes appear in unit turn picker */
   isActive: boolean("is_active").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),

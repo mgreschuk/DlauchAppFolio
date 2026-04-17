@@ -27,6 +27,11 @@ export interface AppFolioPurchaseOrder {
   createdAt: string;
 }
 
+export interface AppFolioVendor {
+  id: string;
+  name: string;
+}
+
 export interface AppFolioApiConfig {
   baseUrl: string;       // https://api.qa.appfolio.com (sandbox) or https://api.appfolio.com (prod)
   clientId: string;
