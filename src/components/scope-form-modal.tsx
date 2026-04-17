@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -23,13 +23,6 @@ import {
   CommandGroup,
   CommandItem,
 } from "@/components/ui/command";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -145,9 +138,10 @@ export function ScopeFormModal({
   onSuccess,
   existingCategories,
 }: ScopeFormModalProps) {
+  const queryClient = useQueryClient();
   const [scopeName, setScopeName] = useState("");
   const [category, setCategory] = useState("");
-  const [selectedVendorId, setSelectedVendorId] = useState("");
+  const [vendorName, setVendorName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { data: vendors = [], isLoading: vendorsLoading } = useQuery({
@@ -155,32 +149,24 @@ export function ScopeFormModal({
     queryFn: fetchCachedVendors,
   });
 
+  const vendorNames = vendors.map((v) => v.name);
+
   useEffect(() => {
     if (editScope) {
       setScopeName(editScope.scopeName);
       setCategory(editScope.category);
-      if (editScope.vendorId) {
-        // Match by AppFolio vendor ID stored on the scope
-        const match = vendors.find((v) => v.appfolioId === editScope.vendorId);
-        setSelectedVendorId(match?.appfolioId ?? "");
-      } else {
-        // Fallback: match by name for scopes created before vendorId was stored
-        const match = vendors.find((v) => v.name === editScope.vendor);
-        setSelectedVendorId(match?.appfolioId ?? "");
-      }
+      setVendorName(editScope.vendor);
     } else {
       setScopeName("");
       setCategory("");
-      setSelectedVendorId("");
+      setVendorName("");
     }
-  }, [editScope, open, vendors]);
+  }, [editScope, open]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const selectedVendor = vendors.find((v) => v.appfolioId === selectedVendorId);
-
-    if (!scopeName.trim() || !category.trim() || !selectedVendor) {
+    if (!scopeName.trim() || !category.trim() || !vendorName.trim()) {
       toast.error("All fields are required");
       return;
     }
@@ -188,6 +174,24 @@ export function ScopeFormModal({
     setIsSubmitting(true);
 
     try {
+      // Check if vendor exists in cache, if not create it
+      let matchedVendor = vendors.find(
+        (v) => v.name.toLowerCase() === vendorName.trim().toLowerCase()
+      );
+
+      if (!matchedVendor) {
+        // Add new vendor to local cache
+        const addRes = await fetch("/api/vendors", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: vendorName.trim() }),
+        });
+        if (addRes.ok) {
+          matchedVendor = await addRes.json();
+          queryClient.invalidateQueries({ queryKey: ["vendors"] });
+        }
+      }
+
       const url = editScope ? `/api/scopes/${editScope.id}` : "/api/scopes";
       const method = editScope ? "PUT" : "POST";
 
@@ -197,8 +201,8 @@ export function ScopeFormModal({
         body: JSON.stringify({
           scopeName,
           category,
-          vendor: selectedVendor.name,
-          vendorId: selectedVendor.appfolioId,
+          vendor: vendorName.trim(),
+          vendorId: matchedVendor?.appfolioId ?? null,
         }),
       });
 
@@ -264,27 +268,13 @@ export function ScopeFormModal({
               <div className="px-3 py-2 text-sm text-[#94a3b8] border border-[#334155] rounded-lg bg-[#0f172a]">
                 Loading vendors...
               </div>
-            ) : vendors.length === 0 ? (
-              <div className="px-3 py-2 text-sm text-[#94a3b8] border border-[#334155] rounded-lg bg-[#0f172a]">
-                No vendors cached — click "Sync Vendors" on the scope matrix page first
-              </div>
             ) : (
-              <Select value={selectedVendorId} onValueChange={(val) => setSelectedVendorId(val ?? "")}>
-                <SelectTrigger className="bg-[#0f172a] border-[#334155] text-[#f8fafc]">
-                  <SelectValue placeholder="Select a vendor" />
-                </SelectTrigger>
-                <SelectContent className="bg-[#1e293b] border-[#334155]">
-                  {vendors.map((v) => (
-                    <SelectItem
-                      key={v.appfolioId}
-                      value={v.appfolioId}
-                      className="text-[#f8fafc] focus:bg-[#334155] focus:text-[#f8fafc]"
-                    >
-                      {v.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Combobox
+                value={vendorName}
+                onChange={setVendorName}
+                options={vendorNames}
+                placeholder="Select or type a vendor name"
+              />
             )}
           </div>
 

@@ -33,9 +33,12 @@ export class AppFolioApiClient implements AppFolioAdapter {
   async getVendors(): Promise<AppFolioVendor[]> {
     return this.rateLimiter.execute(async () => {
       const url = new URL(`${this.baseUrl}/api/v0/vendors`);
+      // AppFolio requires at least one filter parameter on list endpoints
+      url.searchParams.set("filters[LastUpdatedAtFrom]", "1970-01-01T00:00:00Z");
       const res = await fetch(url.toString(), { headers: this.headers });
       if (!res.ok) {
-        throw new Error(`AppFolio API error: ${res.status} ${res.statusText}`);
+        const body = await res.text().catch(() => "");
+        throw new Error(`AppFolio API error: ${res.status} ${res.statusText}${body ? ` — ${body.slice(0, 200)}` : ""}`);
       }
       const data = await res.json();
       return this.mapVendors(data);
