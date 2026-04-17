@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -99,8 +99,8 @@ function Combobox({ value, onChange, options, placeholder }: ComboboxProps) {
             className="bg-[#0f172a] text-[#f8fafc]"
           />
           <CommandList>
-            <CommandEmpty className="text-[#94a3b8]">
-              No matches — will create new
+            <CommandEmpty className="text-[#94a3b8] p-2 text-center text-xs">
+              Not found — create in AppFolio, then Sync Vendors
             </CommandEmpty>
             <CommandGroup>
               {filtered.map((opt) => (
@@ -138,7 +138,6 @@ export function ScopeFormModal({
   onSuccess,
   existingCategories,
 }: ScopeFormModalProps) {
-  const queryClient = useQueryClient();
   const [scopeName, setScopeName] = useState("");
   const [category, setCategory] = useState("");
   const [vendorName, setVendorName] = useState("");
@@ -171,27 +170,18 @@ export function ScopeFormModal({
       return;
     }
 
+    const matchedVendor = vendors.find(
+      (v) => v.name.toLowerCase() === vendorName.trim().toLowerCase()
+    );
+
+    if (!matchedVendor) {
+      toast.error("Vendor not found — create it in AppFolio first, then click Sync Vendors");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      // Check if vendor exists in cache, if not create it
-      let matchedVendor = vendors.find(
-        (v) => v.name.toLowerCase() === vendorName.trim().toLowerCase()
-      );
-
-      if (!matchedVendor) {
-        // Add new vendor to local cache
-        const addRes = await fetch("/api/vendors", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: vendorName.trim() }),
-        });
-        if (addRes.ok) {
-          matchedVendor = await addRes.json();
-          queryClient.invalidateQueries({ queryKey: ["vendors"] });
-        }
-      }
-
       const url = editScope ? `/api/scopes/${editScope.id}` : "/api/scopes";
       const method = editScope ? "PUT" : "POST";
 
