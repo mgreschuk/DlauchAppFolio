@@ -53,7 +53,7 @@ Plans:
 
 Plans:
 - [x] 02-01-PLAN.md — Scopes DB schema and CRUD API routes
-- [ ] 02-02-PLAN.md — Scope matrix UI: data table, filters, add/edit modal, sidebar nav
+- [x] 02-02-PLAN.md — Scope matrix UI: data table, filters, add/edit modal, sidebar nav
 
 **UI hint**: yes
 
